@@ -1,0 +1,53 @@
+{
+    "configurations": [
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
+            "name": "API Gateway",
+            "invokeTarget": {
+                "target": "api",
+                "templatePath":"${workspaceFolder}/template.yaml",
+                "logicalId": "LoginFunction"
+            },
+            "api": {
+                "path": "/login",
+                "httpMethod": "post",
+                "payload": {
+                    "path": "${workspaceFolder}/tests/payloads/TonyChou.json"
+                }
+            }
+        },
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
+            "name": "Template Invoke",
+            "invokeTarget": {
+                "target": "template",
+                "templatePath": "${workspaceFolder}/template.yaml",
+                "logicalId": "LoginFunction"
+            },
+            "lambda": {
+                "payload": {
+                    "path": "${workspaceFolder}/tests/payloads/TonyChou.json"
+                }
+            }
+        },
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
+            "name": "Direct Invoke",
+            "invokeTarget": {
+                "target": "code",
+                "projectRoot": "${workspaceFolder}/src/login",
+                "lambdaHandler": "app.lambda_handler"
+            },
+            "lambda": {
+                "runtime": "python3.12",
+                "payload": {
+                    "path": "${workspaceFolder}/tests/payloads/TonyChou.json"
+                },
+                "environmentVariables": {}
+            }
+        }
+    ]
+}
