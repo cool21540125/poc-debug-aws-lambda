@@ -3,38 +3,42 @@ Resources:
   LoginFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Description: !Sub
-        - Stack ${AWS::StackName} Function ${ResourceName}
-        - ResourceName: LoginFunction
+      FunctionName: LoginFunction
+      Description: !Sub Stack ${AWS::StackName} Function ${ResourceName}
       CodeUri: src/login
       Handler: app.lambda_handler
       Runtime: python3.12
-      MemorySize: 256
+      MemorySize: 128
       Timeout: 5
       Tracing: Active
+      Architectures:
+        - arm64
       Events:
-        AvengersApiPOSTlogin:
+        SmartApi001POSTlogin:
           Type: Api
           Properties:
             Path: /login
             Method: POST
-            RestApiId: !Ref AvengersApi
+            RestApiId: !Ref SmartApi001
   LoginFunctionLogGroup:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${LoginFunction}
-  AvengersApi:
+  SmartApi001:
     Type: AWS::Serverless::Api
     Properties:
       Name: !Sub
         - ${ResourceName} From Stack ${AWS::StackName}
-        - ResourceName: AvengersApi
+        - ResourceName: SmartApi001
       StageName: Prod
       DefinitionBody:
         openapi: '3.0'
         info: {}
         paths:
+          /:
+            get:
+              responses: {}
           /login:
             post:
               x-amazon-apigateway-integration:

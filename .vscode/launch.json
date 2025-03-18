@@ -3,24 +3,44 @@
         {
             "type": "aws-sam",
             "request": "direct-invoke",
-            "name": "API Gateway",
+            "name": "Lambda: Login",
             "invokeTarget": {
-                "target": "api",
-                "templatePath":"${workspaceFolder}/template.yaml",
-                "logicalId": "LoginFunction"
+                "target": "code",
+                "lambdaHandler": "app.lambda_handler",
+                "projectRoot": "${workspaceFolder}/src/login",
             },
-            "api": {
-                "path": "/login",
-                "httpMethod": "post",
+            "lambda": {
+                "runtime": "python3.12",
                 "payload": {
-                    "path": "${workspaceFolder}/tests/payloads/TonyChou.json"
-                }
+                    "json": {
+                        "username": "TonyChou",
+                        "password": "12345687",
+                    }
+                },
+                "environmentVariables": {}
             }
         },
         {
             "type": "aws-sam",
             "request": "direct-invoke",
-            "name": "Template Invoke",
+            "name": "Lambda: Login2",
+            "invokeTarget": {
+                "target": "code",
+                "lambdaHandler": "app.lambda_handler",
+                "projectRoot": "${workspaceFolder}/src/login",
+            },
+            "lambda": {
+                "runtime": "python3.12",
+                "payload": {
+                    "path": "${workspaceFolder}/tests/payloads/TonyChou_login.json"
+                },
+                "environmentVariables": {}
+            }
+        },
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
+            "name": "Login3: Template Invoke",
             "invokeTarget": {
                 "target": "template",
                 "templatePath": "${workspaceFolder}/template.yaml",
@@ -28,26 +48,26 @@
             },
             "lambda": {
                 "payload": {
-                    "path": "${workspaceFolder}/tests/payloads/TonyChou.json"
+                    "path": "${workspaceFolder}/tests/payloads/TonyChou_login.json"
                 }
             }
         },
         {
             "type": "aws-sam",
             "request": "direct-invoke",
-            "name": "Direct Invoke",
+            "name": "Login4: API Gateway",
             "invokeTarget": {
-                "target": "code",
-                "projectRoot": "${workspaceFolder}/src/login",
-                "lambdaHandler": "app.lambda_handler"
+                "target": "api",
+                "templatePath": "${workspaceFolder}/template.yaml",
+                "logicalId": "LoginFunction"
             },
-            "lambda": {
-                "runtime": "python3.12",
+            "api": {
+                "path": "/login",
+                "httpMethod": "post",
                 "payload": {
-                    "path": "${workspaceFolder}/tests/payloads/TonyChou.json"
-                },
-                "environmentVariables": {}
+                    "path": "${workspaceFolder}/tests/payloads/TonyChou_login4.json"
+                }
             }
-        }
+        },
     ]
 }
